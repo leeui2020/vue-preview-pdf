@@ -94,9 +94,6 @@ export default {
       return this.imageList.length
     },
   },
-  created() {
-    this.getImageList()
-  },
   mounted() {
     this._handlerScroll = this.handlerScroll.bind(this)
     this.$refs.scroll.addEventListener('scroll', this._handlerScroll)
@@ -110,9 +107,13 @@ export default {
     getImageList() {
       this.$emit('loadStart')
       this.loading = true
+      this.imageList = []
       return utils.pdfToImage(this.url).then(list => {
         this.imageList = list
         this.loading = false
+        this.$emit('loadSuccess')
+      }).catch(e => {
+        this.$emit('loadFail', e)
       })
     },
     handlerScroll(e) {

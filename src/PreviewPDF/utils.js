@@ -3,7 +3,7 @@ const worker = require('pdfjs-dist/build/pdf.worker')
 
 // PDF二进制数据转图片
 export function pdfToImage(url) {
-  return new Promise(async (resolve) => {
+  return new Promise(async (resolve, reject) => {
     window.pdfjsWorker = worker
     pdfjsLib.getDocument(url).promise.then(pdf => {
       const imageList = []
@@ -36,6 +36,6 @@ export function pdfToImage(url) {
         })
       }
       loadNext()
-    })
+    }).catch(e => reject(e))
   })
 }

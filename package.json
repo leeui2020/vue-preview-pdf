@@ -1,6 +1,6 @@
 {
   "name": "vue-preview-pdf",
-  "version": "0.0.1",
+  "version": "0.0.8",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --target lib --name VuePreviewPDF ./src/PreviewPDF/index.js --dest ./package"
@@ -18,5 +18,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/leeui2020/vue-preview-pdf.git"
-  }
+  },
+  "typings": "./vue-preview-pdf.d.ts",
+  "main": "./package/VuePreviewPDF.common.js"
 }

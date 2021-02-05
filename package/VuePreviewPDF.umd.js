@@ -64492,12 +64492,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"e62d325a-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/PreviewPDF/Main.vue?vue&type=template&id=6303d6d2&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"e62d325a-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/PreviewPDF/Main.vue?vue&type=template&id=82894b2a&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('section',{staticClass:"clxh-preview",style:(_vm.rootStyle)},[(_vm.loading)?[(_vm.customLoading)?_vm._t("loading"):_c('section',{staticClass:"clxh-preview-loading"},[_c('div',{staticClass:"clxh-preview-loading-icon"}),_c('div',{staticClass:"clxh-preview-loading-icon"}),_c('div',{staticClass:"clxh-preview-loading-icon"})])]:_vm._e(),_c('section',{ref:"scroll",staticClass:"clxh-preview-scroll"},[(_vm.imageList.length)?_c('section',{staticClass:"clxh-preview-wrapper"},_vm._l((_vm.imageList),function(item,index){return _c('aside',{key:index,ref:"items",refInFor:true,staticClass:"clxh-preview-item"},[_c('img',{staticClass:"clxh-preview-image",class:_vm.disabledDownload ? 'disabled' : '',attrs:{"src":item,"alt":""}})])}),0):_vm._e()]),(_vm.numPages)?[(_vm.customPager)?_vm._t("pager",null,{"current":_vm.currentPage,"total":_vm.numPages}):_c('section',{staticClass:"clxh-preview-pager"},[_c('span',{staticClass:"clxh-preview-pager-item"},[_vm._v(_vm._s(_vm.currentPage + 1))]),_c('span',[_vm._v("/")]),_c('span',{staticClass:"clxh-preview-pager-item"},[_vm._v(_vm._s(_vm.numPages))])])]:_vm._e()],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/PreviewPDF/Main.vue?vue&type=template&id=6303d6d2&
+// CONCATENATED MODULE: ./src/PreviewPDF/Main.vue?vue&type=template&id=82894b2a&
 
 // CONCATENATED MODULE: ./src/PreviewPDF/utils.js
 const pdfjsLib = __webpack_require__("9511")
@@ -64505,7 +64505,7 @@ const worker = __webpack_require__("55db")
 
 // PDF二进制数据转图片
 function pdfToImage(url) {
-  return new Promise(async (resolve) => {
+  return new Promise(async (resolve, reject) => {
     window.pdfjsWorker = worker
     pdfjsLib.getDocument(url).promise.then(pdf => {
       const imageList = []
@@ -64538,7 +64538,7 @@ function pdfToImage(url) {
         })
       }
       loadNext()
-    })
+    }).catch(e => reject(e))
   })
 }
 
@@ -64639,9 +64639,6 @@ function pdfToImage(url) {
       return this.imageList.length
     },
   },
-  created() {
-    this.getImageList()
-  },
   mounted() {
     this._handlerScroll = this.handlerScroll.bind(this)
     this.$refs.scroll.addEventListener('scroll', this._handlerScroll)
@@ -64655,9 +64652,13 @@ function pdfToImage(url) {
     getImageList() {
       this.$emit('loadStart')
       this.loading = true
+      this.imageList = []
       return pdfToImage(this.url).then(list => {
         this.imageList = list
         this.loading = false
+        this.$emit('loadSuccess')
+      }).catch(e => {
+        this.$emit('loadFail', e)
       })
     },
     handlerScroll(e) {

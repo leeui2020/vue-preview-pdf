@@ -9,4 +9,7 @@ declare class VuePreviewPDF extends Vue {
   customLoading: boolean;
   customPager: boolean;
   disabledDownload: boolean;
+  public getImageList (): Promise<any>;
 }
+
+export default VuePreviewPDF
